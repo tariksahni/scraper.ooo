@@ -31,17 +31,18 @@ require('./background/contextMenus');
 require('./background/inject');
 require('./background/badge');
 
-var htmlInfo;
+// var htmlInfo;
 
-chrome.runtime.onMessage.addListener(
-  function(message, sender, sendResponse) {
-    if(message.method == 'setInfo')
-    { 
-      htmlInfo = message.htmlElement;
-    }
-    else if(message.method == 'getInfo')
-    {
-      sendResponse(htmlInfo);
-    }
-  }
-);
+// chrome.runtime.onMessage.addListener(
+//   function(message, sender, sendResponse) {
+//     if(message.method == 'setInfo')
+//     { 
+//       htmlInfo = message.key;
+//     }
+//     else if(message.method == 'getInfo')
+//     {
+//       sendResponse(htmlInfo);
+//     }
+//   }
+// );
+

@@ -7,7 +7,9 @@ function handler(e){
   	var a = evt.target;
   	var htmlElement = a.outerHTML ;
   	console.log(htmlElement);
-   	chrome.runtime.sendMessage({'method':'setInfo','htmlElement':htmlElement});
+   	// chrome.runtime.sendMessage({'method':'setInfo', key:htmlElement});
+   	var port = chrome.runtime.connect({name: "nodeExchanager"});
+	port.postMessage({htmlElement: htmlElement});
 }
 
 

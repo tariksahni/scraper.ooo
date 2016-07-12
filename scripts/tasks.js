@@ -14,10 +14,13 @@ exports.replaceWebpack = () => {
 
 exports.copyAssets = type => {
   console.log('tasks - manifest and jade');
+  console.log(type);
   const env = type === 'build' ? 'prod' : type;
   rm('-rf', type);
   mkdir(type);
+
   cp(`chrome/manifest.${env}.json`, `${type}/manifest.json`);
+  console.log("Reached Here");
   cp(`chrome/myscript.js`, `${type}/myscript.js`);
   // cp(`chrome/localforage.min.js`, `${type}/localforage.min.js`);
   cp('-R', 'chrome/assets/*', type);
