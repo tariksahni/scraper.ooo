@@ -19,6 +19,19 @@ export default class TodoItem extends Component {
     };
   }
 
+ 
+  // componentDidMount(){
+  //   console.log("todoitem");
+  //   chrome.runtime.onMessage.addListener(function(request, sender) {
+  //     if (request.action == "getSource") {
+  //       message.innerText = request.source;
+  //       console.log(request.source);
+  //     }
+  //   });
+  // }
+
+
+
   handleDoubleClick = () => {
     this.setState({ editing: true });
   };

@@ -48,13 +48,12 @@ export default class App extends Component {
   //   }
 
   // } 
-
+  // <MainSection todos={todos} actions={actions} />
   render() {
     const { todos, actions } = this.props;
     return (
       <div className={style.normal}>
-        <Header addTodo={actions.addTodo} />
-        <MainSection todos={todos} actions={actions} />
+        <Header addTodo={actions.addTodo} />  
       </div>
     );
   }

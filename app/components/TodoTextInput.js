@@ -17,8 +17,48 @@ export default class TodoTextInput extends Component {
     super(props, context);
     this.state = {
       text: this.props.text || '',
-      href: null
+      href: "",
+      source:"",
+      allHref:[]
     };
+  }
+
+
+  componentDidMount(){
+    console.log("component");
+    var sourceCode = "";
+    chrome.runtime.onMessage.addListener((request, sender) => {
+      if (request.action == "getSource") {
+        sourceCode = request.source;
+        this.setState({
+          source:sourceCode
+        });
+      }
+    });
+  }
+
+  findAllHref = () => {
+    console.log("findAllHref");
+    var sourceCode = this.state.source;
+    // console.log($(sourceCode));
+    var hrefArray = [];
+    var className = this.state.text ;
+    console.log(className);
+    var selector = 'a.' + className ;
+    console.log(selector);
+    $(sourceCode).find(selector).each((index,Element)=>{
+      var tempHref = $(Element).attr('href') ;
+      var baseUrl = "www.flipkart.com" ; 
+      hrefArray[index] = baseUrl.concat(tempHref);
+      // this.setState=({
+      //   allhref:hrefArray
+      // });
+    });
+    console.log(hrefArray);
+    this.setState({
+      allHref:hrefArray
+    });
+    console.log(this.state.allHref);
   }
 
   showHref = () => {
@@ -28,7 +68,7 @@ export default class TodoTextInput extends Component {
         var htmlInfo = msg.htmlElement;
         this.nodeProcessor(htmlInfo);
       });
-    });
+    });   
   }
 
   nodeProcessor = (node) =>{
@@ -40,12 +80,11 @@ export default class TodoTextInput extends Component {
 
     else { 
       var nodeClass= $(node).attr('class');
-      var nodeHref1 = $(node).attr('href');
+      var nodeHref = $(node).attr('href');
       this.setState({
         text:nodeClass,
         href: nodeHref
       });
-      // console.log($(node).text().trim());
     }
   }
 
@@ -54,29 +93,18 @@ export default class TodoTextInput extends Component {
     alert(href);
   } 
 
-  // handleSubmit = evt => {
-  //   const text = evt.target.value.trim();
-  //   if (evt.which === 13) {
-  //     this.props.onSave(text);
-  //     if (this.props.newTodo) {
-  //       this.setState({ text: '' });
-  //     }
-  //   }
-  // };
-
-  // handleChange = evt => {
-  //   this.setState({ text: evt.target.value });
-  // };
-
-  // handleBlur = evt => {
-  //   if (!this.props.newTodo) {
-  //     this.props.onSave(evt.target.value);
-  //   }
-  // };
 
   render() {
+    let element;
+    element = (
+      <ul>
+        {this.state.allHref.map(liEmenent => {
+          return(<li className={style.li}>{liEmenent}</li>)
+        })}
+      </ul>  
+    );
     return (
-      <p>
+      <div >
         <Row>
           <Col lg={1}>
             <textarea
@@ -96,8 +124,15 @@ export default class TodoTextInput extends Component {
           <Col lg={1}>
             <Button className={style.button} onClick={this.showPreview}>Show</Button>
           </Col>
+           <Col lg={1}>
+            <Button className={style.button} onClick={this.findAllHref}>Show href's</Button>
+          </Col>
         </Row>
-      </p>
+        <h5 className={style.h5}> List of hrefs </h5>
+        <div className={style.div1}>
+          {element}
+        </div> 
+      </div>   
     );
   }
 }

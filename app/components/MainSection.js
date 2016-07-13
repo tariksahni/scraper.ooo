@@ -20,6 +20,7 @@ export default class MainSection extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = { filter: SHOW_ALL };
+    // console.log(this.props.todos);
   }
 
   handleClearCompleted = () => {
