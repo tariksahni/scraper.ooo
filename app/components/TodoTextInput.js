@@ -104,7 +104,7 @@ export default class TodoTextInput extends Component {
       </ul>  
     );
     return (
-      <div >
+      <div>
         <Row>
           <Col lg={1}>
             <textarea

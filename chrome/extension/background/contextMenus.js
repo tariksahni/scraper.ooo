@@ -22,13 +22,13 @@ function popWindow(type) {
     });
   }
 }
-
+console.log('context menu');
 chrome.contextMenus.create({
   id: CONTEXT_MENU_ID,
   title: 'React Chrome Extension Example',
   contexts: ['all'],
   documentUrlPatterns: [
-    'https://github.com/*'
+    '<all_urls>'
   ]
 });
 
