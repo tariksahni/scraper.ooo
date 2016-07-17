@@ -3,6 +3,8 @@ import classnames from 'classnames';
 import { Input, Modal, Button, Grid, Col, Row, Tabs, Tab, Pagination } from 'react-bootstrap';
 import style from './TodoTextInput.css';
 import $ from'jquery';
+var hrefArray = [];
+
 export default class TodoTextInput extends Component {
 
   static propTypes = {
@@ -41,13 +43,13 @@ export default class TodoTextInput extends Component {
     console.log("findAllHref");
     var sourceCode = this.state.source;
     // console.log($(sourceCode));
-    var hrefArray = [];
+    
     var className = this.state.text ;
     console.log(className);
     var selector = 'a.' + className ;
     console.log(selector);
     $(sourceCode).find(selector).each((index,Element)=>{
-      var tempHref = $(Element).attr('href') ;
+      var tempHref = $(Element).attr('href').replace(/(\r\n|\n|\r)/gm,"") ;
       var baseUrl = "www.flipkart.com" ; 
       hrefArray[index] = baseUrl.concat(tempHref);
       // this.setState=({
@@ -58,7 +60,14 @@ export default class TodoTextInput extends Component {
     this.setState({
       allHref:hrefArray
     });
-    console.log(this.state.allHref);
+
+    chrome.storage.local.set({
+      allHrefArray:hrefArray
+    });
+    chrome.storage.local.get('allHrefArray',result  =>{
+      console.log("hrefs Saved");
+      console.log(result.allHrefArray);
+    })
   }
 
   showHref = () => {
