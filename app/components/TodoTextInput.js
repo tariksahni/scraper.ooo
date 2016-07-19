@@ -4,12 +4,12 @@ import { Input, Modal, Button, Grid, Col, Row, Tabs, Tab, Pagination } from 'rea
 import style from './TodoTextInput.css';
 import $ from'jquery';
 var hrefArray = [];
+var productInformation = {} ;
 var nextPageIndex = false ;
 export default class TodoTextInput extends Component {
 
   static propTypes = {
     onSave: PropTypes.func.isRequired,
-    text: PropTypes.string,
     placeholder: PropTypes.string,
     editing: PropTypes.bool,
     newTodo: PropTypes.bool
@@ -18,7 +18,7 @@ export default class TodoTextInput extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      text: this.props.text || '',
+      nodeClass:'',
       href: "",
       source:"",
       allHref:[],
@@ -45,7 +45,7 @@ export default class TodoTextInput extends Component {
 
     hrefArray =[];
     var sourceCode = this.state.source;
-    var className = this.state.text ;
+    var className = this.state.nodeClass ;
     var selector = this.state.nodeTag + '.' + className ;
     console.log(selector);
 
@@ -82,10 +82,11 @@ export default class TodoTextInput extends Component {
 
   nodeProcessor = (node) => {
     console.log(node);
-    var nodeClass = $(node).attr('class');
+    var nodeClass = $(node).attr('class').replace(" ",".");
+    console.log(nodeClass);
     var nodeTag = node.split(' ')[0].split('<')[1] ;
     this.setState({
-      text:nodeClass,
+      nodeClass:nodeClass,
       nodeTag:nodeTag
     });
 
@@ -106,7 +107,9 @@ export default class TodoTextInput extends Component {
 
     if( nodeTag == 'h1' || nodeTag == 'span' || nodeTag == 'h2' || nodeTag == 'h3' || nodeTag == 'h4' || nodeTag == 'h5' || nodeTag == 'h6' || nodeTag == 'h7' || nodeTag == 'h8' || nodeTag == 'h9' ){
       var selector = nodeTag + '.' + nodeClass ;
-      var nodeValue = $(this.state.source).find(selector).text();
+      var nodeValue = $(node).find(selector).text();
+      console.log(selector);
+      console.log(nodeValue);
       this.setState({
         nodeValue:nodeValue,
       });
@@ -114,19 +117,31 @@ export default class TodoTextInput extends Component {
   }
 
   showPreview = () => {
-    var nodeValue = this.state.nodeValue;
-    alert(nodeValue);
+    var nodeSelector = this.state.nodeTag + '.' + this.state.nodeClass;
+    alert(nodeSelector);
   } 
 
-  nextPageFunction = () =>{
-    console.log('yeah');
-    nextPageIndex = true ;
-    this.render();
-  }
 
   saveFieldValue =() =>{
+    var fieldValue = this.refs.fieldValue.value;
+    var fieldClass = this.state.nodeClass;
+    console.log(fieldValue);
+    console.log(fieldClass);
+    productInformation[fieldValue] = fieldClass;
+    console.log(productInformation);
+  }
 
-    let fieldValue = this.refs.fieldValue.value;
+  saveAll =() =>{
+    console.log("SAVE-ALL");
+    console.log(productInformation);
+    chrome.storage.local.set({
+      allData:productInformation
+    });
+
+    chrome.storage.local.get('allData',result  =>{
+      console.log("All DATA Saved");
+      console.log(result);
+    })
   }
 
   render() {
@@ -149,7 +164,7 @@ export default class TodoTextInput extends Component {
               type="text"
               placeholder={this.props.placeholder}
               autoFocus="true"
-              value={this.state.text}
+              value={this.state.nodeClass}
             />
           </Col>
           <Col lg={1}>
@@ -181,12 +196,17 @@ export default class TodoTextInput extends Component {
             type="text"
             placeholder="Desired Node Class"
             autoFocus="true"
-            value={this.state.text}
+            value={this.state.nodeClass}
             />
         </p>
         <Button className={style.button} onClick = {this.showClass}>Add NodeClass</Button>
         <Button className={style.button} onClick = {this.showPreview}>Show NodeValue</Button>
         <Button className={style.button} onClick = {this.saveFieldValue}>Add them</Button>
+        <br />
+        <br />
+        <br />
+        <h8 className={style.h8}> CLICK TO SAVE THE DATA </h8>&nbsp;&nbsp;&nbsp;&nbsp;
+        <Button className={style.button} onClick = {this.saveAll}>SAVE</Button>
       </div>  
     );
 

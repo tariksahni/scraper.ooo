@@ -25,7 +25,7 @@ function popWindow(type) {
 console.log('context menu');
 chrome.contextMenus.create({
   id: CONTEXT_MENU_ID,
-  title: 'React Chrome Extension Example',
+  title: 'scraper.ooo',
   contexts: ['all'],
   documentUrlPatterns: [
     '<all_urls>'
