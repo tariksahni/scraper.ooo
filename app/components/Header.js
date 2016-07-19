@@ -19,7 +19,7 @@ export default class Header extends Component {
         <h1>Scrape It</h1>
         <TodoTextInput
           newTodo
-          onSave={this.handleSave}
+          // onSave={this.handleSave}
           placeholder="Node Class"
         />
 
